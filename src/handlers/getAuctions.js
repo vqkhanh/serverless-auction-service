@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import AWS from 'aws-sdk';
 
 import middy from '@middy/core';  // engine middleware
@@ -12,22 +11,17 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 //contex: contain metadata, provider when lambda executed
 // event: object inlude all infomation about event or this execution like body query parameter, path para, header, so on
 // can add custom data (event or context) via middleware
-async function createAuction(event, context) {
-  const { title } = event.body;
-  const now = new Date();
+async function getAuctions(event, context) {
+ let auctions;
 
-  const auction = {
-    id: uuid(),
-    title,
-    status: 'OPEN',
-    createAt: now.toISOString()
-  };
 
   try {
-    await dynamoDB.put({
-      TableName: process.env.AUCTIONS_TABLE_NAME,
-      Item: auction,
+    const result = await dynamoDB.scan({ 
+        TableName: process.env.AUCTIONS_TABLE_NAME 
     }).promise();
+
+    auctions = result.Items;
+   
   } catch (error) {
     console.error(error);
     throw new createHttpError.InternalServerError(error);
@@ -37,11 +31,11 @@ async function createAuction(event, context) {
 
   return {
     statusCode: 201,
-    body: JSON.stringify({ auction }),
+    body: JSON.stringify({ auctions }),
   };
 }
 
-export const handler = middy(createAuction)
+export const handler = middy(getAuctions)
   .use(httpJsonBodyParser())
   .use(httpEventNormalizer())
   .use(httpErrorHandler());

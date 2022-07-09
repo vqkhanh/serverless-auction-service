@@ -6,8 +6,13 @@
         "@babel/core": "^7.18.5",
         "@babel/polyfill": "^7.12.1",
         "@babel/preset-env": "^7.18.2",
+        "@middy/core": "^3.1.0",
+        "@middy/http-error-handler": "^3.1.0",
+        "@middy/http-event-normalizer": "^3.1.0",
+        "@middy/http-json-body-parser": "^3.1.0",
         "aws-sdk": "^2.1162.0",
         "babel-loader": "^8.2.5",
+        "http-errors": "^2.0.0",
         "serverless-bundle": "^5.3.0",
         "uuid": "^8.3.2",
         "webpack": "^5.73.0"
