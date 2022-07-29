@@ -17,7 +17,7 @@ provider:
 resources:
   Resources:
     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
-  
+
 functions:
   createAuction:
     handler: src/handlers/createAuction.handler
@@ -25,14 +25,28 @@ functions:
       - http:
           method: POST
           path: /auction
-        
-    
+
   getAuctions:
     handler: src/handlers/getAuctions.handler
     events:
       - http:
           method: GET
           path: /auctions
+
+  placeBid:
+    handler: src/handlers/placeBid.handler
+    events:
+      - http:
+          method: PATCH
+          path: auction/{id}/bid
+
+  getAuction:
+    handler: src/handlers/getAuction.handler
+    timeout: 45
+    events:
+      - http:
+          method: GET
+          path: /auction/{id}
 
 custom:
   AuctionsTable:
