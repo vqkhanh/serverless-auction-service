@@ -17,7 +17,6 @@ export async function getAuctionById(id) {
       .promise();
 
     auction = result.Item;
-    console.log("auction11=", auction);
   } catch (error) {
     console.error(error);
     throw new createHttpError.InternalServerError(error);
