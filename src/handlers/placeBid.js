@@ -4,6 +4,8 @@ import commonMiddleware from "../lib/commonMiddleware";
 import createHttpError from "http-errors";
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 import { getAuctionById } from "./getAuction";
+import validator from "@middy/validator";
+import placeBidSchema from "../lib/schemas/placeBidSchema";
 
 //contex: contain metadata, provider when lambda executed
 // event: object inlude all infomation about event or this execution like body query parameter, path para, header, so on
@@ -47,4 +49,12 @@ async function placeBid(event, context) {
   };
 }
 
-export const handler = commonMiddleware(placeBid);
+export const handler = commonMiddleware(placeBid).use(
+  validator({
+    inputSchema: placeBidSchema,
+    ajvOptions: {
+      useDefaults: false,
+      strict: false,
+    },
+  })
+);
